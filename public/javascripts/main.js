@@ -5,16 +5,29 @@ const username = document.getElementById("user-name");
 const userBalance = document.getElementById("user-balance");
 
 const topPlayers = document.getElementById("top");
-const stocksItem = document.getElementById("stocks-item-list");
-const newsItem = document.getElementById("news-item");
-const portfolioItem = document.getElementById("portfolio-item-list");
 
+const stocksItem = document.getElementById("stocks-item-list");
+
+const newsItem = document.getElementById("news-item");
+
+const portfolioItem = document.getElementById("portfolio-item-list");
+const portfolioValue = document.getElementById("portfolio-value");
 
 const templateTop = document.getElementById("players-template");
 const templateStock = document.getElementById("stocks-template");
 const templateNews = document.getElementById("news-template");
 const templatePortfolio = document.getElementById("portfolio-template");
-const portfolioValue = document.getElementById("portfolio-value");
+
+const tradeList = document.getElementById("trade-menu");
+
+const buyInput = document.getElementById("buy-input");
+const sellInput = document.getElementById("sell-input");
+
+const sellBtn = document.getElementById("sell-button");
+const buyBtn = document.getElementById("buy-button");
+
+sellBtn.addEventListener("click", sellStock);
+// buyBtn.addEventListener("click", buyStock);
 
 let isUpdating = false;
 
@@ -129,6 +142,9 @@ async function getStocks(){
         // altes löschen
         clearItems("stock-item");
 
+        const selected = tradeList.value;
+        tradeList.length = 1;
+
         const data = await response.json();
 
         // anzeigen
@@ -143,9 +159,16 @@ async function getStocks(){
             stockAmount.textContent = stock.numberAvailable;
 
             stocksItem.appendChild(clone);
+
+            // add all available stocks to the list
+            const option = document.createElement("option");
+            option.value = stock.name;
+            option.textContent = stock.name;
+
+            tradeList.appendChild(option);
         });
 
-
+        tradeList.value = selected;
     } catch (error){
         console.log(error);
     }
@@ -228,4 +251,8 @@ function clearItems(name){
     items.forEach(item => {
         item.remove();
     });
+}
+
+async function sellStock(){
+
 }
