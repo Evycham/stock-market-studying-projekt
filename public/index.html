@@ -3,10 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <title>Stock Market</title>
+    <script src="javascripts/main.js" defer></script>
 </head>
 <body>
     <h1>Stock Market</h1>
     <p>Eine extrem simple Börsensimulation</p>
     <p><a href="/api-docs">API Docs</a> </p>
+
+    <!--user info-->
+    <div id="user-info">
+        <p id="user-name"></p>
+        <p id="user-balance"></p>
+    </div>
+
+    <!--all stocks-->
+    <div id="stocks-item">
+        <h2 class="title">All stocks</h2>
+        <ul id="stocks-item-list">
+            <template id="stocks-template">
+                <li class="stock-item">
+                    <span class="stock-name"></span>
+                    <span class="stock-price"></span>
+                    <span class="stock-amount"></span>
+                </li>
+            </template>
+        </ul>
+    </div>
+
+    <!--all players-->
+    <div id="top">
+        <h2 class="title">Top players</h2>
+        <div class="top-players">
+            <template id="players-template">
+                <span class="rank-column"></span>
+                <span class="player-column"></span>
+                <span class="value-column"></span>
+            </template>
+        </div>
+    </div>
+
 </body>
 </html>
