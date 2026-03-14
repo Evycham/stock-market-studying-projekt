@@ -253,7 +253,10 @@ function clearItems(name){
 }
 
 
-//
+/**
+ * methode für Stock ver-/einkaufen
+ * */
+
 async function tradeStock(action){
     const stockName = tradeList.value;
     let value = Number(tradeInput.value);
