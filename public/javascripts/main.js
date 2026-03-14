@@ -20,14 +20,13 @@ const templatePortfolio = document.getElementById("portfolio-template");
 
 const tradeList = document.getElementById("trade-menu");
 
-const buyInput = document.getElementById("buy-input");
-const sellInput = document.getElementById("sell-input");
+const tradeInput = document.getElementById("sell-input");
 
 const sellBtn = document.getElementById("sell-button");
 const buyBtn = document.getElementById("buy-button");
 
-sellBtn.addEventListener("click", sellStock);
-// buyBtn.addEventListener("click", buyStock);
+sellBtn.addEventListener("click", () => tradeStock("sell"));
+buyBtn.addEventListener("click", () => tradeStock("buy"));
 
 let isUpdating = false;
 
@@ -253,6 +252,43 @@ function clearItems(name){
     });
 }
 
-async function sellStock(){
 
+//
+async function tradeStock(action){
+    const stockName = tradeList.value;
+    let value = Number(tradeInput.value);
+
+    if(stockName === "---" || !Number.isInteger(value) || value <= 0){
+        return;
+    }
+
+    if(action === "sell"){
+        value = - value;
+    }
+
+    const transaction = {
+        stock: {
+            name: stockName,
+        },
+        number: value
+    };
+
+    try{
+        const response = await fetch("/api/account/positions", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(transaction)
+        });
+
+        if(!response.ok){
+            throw new Error(response.statusText);
+        }
+
+        const data = await response.json();
+        console.log("Success:", data);
+    } catch (error){
+        console.log(error);
+    }
 }
