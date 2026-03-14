@@ -16,6 +16,20 @@
         <p id="user-balance"></p>
     </div>
 
+    <!--portfolio-->
+    <div id="portfolio-items">
+        <h2 class="title">Your portfolio</h2>
+        <ul id="portfolio-item-list">
+            <template id="portfolio-template">
+                <li class="portfolio-item">
+                    <span class="stock-name"></span>
+                    <span class="stock-count"></span>
+                </li>
+            </template>
+        </ul>
+        <span id="portfolio-value"></span>
+    </div>
+
     <!--all stocks-->
     <div id="stocks-item">
         <h2 class="title">All stocks</h2>
@@ -41,5 +55,17 @@
             </div>
         </template>
     </div>
+
+    <!--news-->
+    <div id="news-item">
+        <h2 class="title">News</h2>
+        <template id="news-template">
+            <div class="news">
+                <span class="news-text"></span>
+                <span class="news-time"></span>
+            </div>
+        </template>
+    </div>
+
 </body>
 </html>
