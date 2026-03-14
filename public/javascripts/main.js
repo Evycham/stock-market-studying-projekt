@@ -18,10 +18,7 @@ const portfolioValue = document.getElementById("portfolio-value");
 
 let isUpdating = false;
 
-getUserInfo();
-getAllUser();
-getStocks();
-getNews();
+init();
 
 setInterval(() => {
     if(isUpdating) {
@@ -30,6 +27,14 @@ setInterval(() => {
     isUpdating = true;
     update();
 }, 2_000);
+
+function init() {
+    getUserInfo();
+    getAllUser();
+    getStocks();
+    getNews();
+    getPortfolio();
+}
 
 /**
  * function for the permanent updating
@@ -40,6 +45,7 @@ async function update() {
         await getUserInfo();
         await getAllUser();
         await getNews();
+        await getPortfolio();
         isUpdating = false;
     } catch(error){
         console.log(error);
@@ -188,18 +194,26 @@ async function getPortfolio(){
             throw new Error(response.statusText);
         }
 
+        // clear old values
         clearItems("portfolio-item");
 
         const data = await response.json();
 
+        portfolioValue.textContent = `The total price of your portfolio: ${data.value}$`;
 
+        data.positions.forEach(position => {
 
-        data.forEach(input => {
-            const clone = templatePortfolio.content.cloneNode(true);
-            const stockName = clone.querySelector(".stock-name");
-            const stockCount = clone.querySelector(".stock-count");
+            if(position.number !== 0){
+                const clone = templatePortfolio.content.cloneNode(true);
+                const stockName = clone.querySelector(".stock-name");
+                const stockCount = clone.querySelector(".stock-count");
+
+                stockName.textContent = position.stock.name;
+                stockCount.textContent = position.number;
+
+                portfolioItem.appendChild(clone);
+            }
         });
-
     } catch (error){
         console.log(error);
     }
