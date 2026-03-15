@@ -59,14 +59,23 @@
         </ul>
     </div>
 
-    <!--all players-->
+    <!--sms-->
     <div id="messages-item">
         <h2 class="title">Messages</h2>
+        <h4>Your message:</h4>
+        <label><input type="text"></label>
+        <h4>Select user:</h4>
+        <label><input type="checkbox" value="max" class="receiver">max</label>
+        <label><input type="checkbox" value="moritz" class="receiver">moritz</label>
+        <label><input type="checkbox" value="lempel" class="receiver">lempel</label>
+        <label><input type="checkbox" value="bolte" class="receiver">bolte</label>
+        <button id="send-button">Send</button>
+
         <div id="messages">
             <template>
                 <div class="sms">
-                    <span class="sender"></span>
-                    <span class=""></span>
+                    <span class="sms-sender"></span>
+                    <span class="sms-text"></span>
                 </div>
             </template>
         </div>

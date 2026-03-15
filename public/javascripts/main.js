@@ -19,6 +19,7 @@ const templateNews = document.getElementById("news-template");
 const templatePortfolio = document.getElementById("portfolio-template");
 
 const tradeList = document.getElementById("trade-menu");
+const userList = document.getElementById("messages-menu");
 
 const tradeInput = document.getElementById("sell-input");
 
@@ -46,6 +47,7 @@ function init() {
     getStocks();
     getNews();
     getPortfolio();
+    tradeInput.value = "";
 }
 
 /**
@@ -291,6 +293,7 @@ async function tradeStock(action){
 
         const data = await response.json();
         console.log("Success:", data);
+        tradeInput.value = "";
         await update();
     } catch (error){
         console.log(error);
@@ -306,6 +309,21 @@ async function getMessage(){
         }
 
         const data = await response.json();
+
+
+    } catch (error){
+        console.log(error);
+    }
+}
+
+async function sendMessage(){
+    try{
+        const receivers = Array.from(document.querySelectorAll(".receiver:checked")).map(el => el.value);
+
+        if(receivers.length === 0){
+            return;
+        }
+
 
 
     } catch (error){
