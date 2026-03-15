@@ -478,13 +478,26 @@ function showCharts(history, min, max){
 }
 
 function getCharts(){
+    let min = 0;
+    let max = 0;
 
+    priceHistory.forEach((history, name) => {
+        if(history.length === 0){
+            return;
+        }
+        if(min > Math.min(...history)){
+            min = Math.min(...history);
+        }
+        if(max < Math.max(...history)){
+            max = Math.max(...history);
+        }
+    })
 
     ctx.clearRect(0, 0, chartsCanvas.width, chartsCanvas.height);
     ctx.lineWidth = 2;
 
     priceHistory.forEach((history, name) => {
         ctx.strokeStyle = "hsl(" + Math.random()*360 + ",70%,50%)";
-        showCharts(history);
+        showCharts(history, min, max);
     })
 }
