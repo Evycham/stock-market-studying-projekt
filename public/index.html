@@ -59,26 +59,27 @@
         </ul>
     </div>
 
-    <!--sms-->
+    <!--send sms-->
     <div id="messages-item">
         <h2 class="title">Messages</h2>
         <h4>Your message:</h4>
-        <label><input type="text"></label>
+        <label><textarea id="message-text"></textarea></label>
         <h4>Select user:</h4>
-        <label><input type="checkbox" value="max" class="receiver">max</label>
-        <label><input type="checkbox" value="moritz" class="receiver">moritz</label>
-        <label><input type="checkbox" value="lempel" class="receiver">lempel</label>
-        <label><input type="checkbox" value="bolte" class="receiver">bolte</label>
+        <label><input type="checkbox" value="max" class="recipient">max</label>
+        <label><input type="checkbox" value="moritz" class="recipient">moritz</label>
+        <label><input type="checkbox" value="lempel" class="recipient">lempel</label>
+        <label><input type="checkbox" value="bolte" class="recipient">bolte</label>
         <button id="send-button">Send</button>
+    </div>
 
-        <div id="messages">
-            <template>
-                <div class="sms">
-                    <span class="sms-sender"></span>
-                    <span class="sms-text"></span>
-                </div>
-            </template>
-        </div>
+    <!--receive sms-->
+    <div id="messages">
+        <template>
+            <div class="sms">
+                <span class="sms-sender"></span>
+                <span class="sms-text"></span>
+            </div>
+        </template>
     </div>
 
     <!--all players-->

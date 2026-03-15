@@ -19,15 +19,17 @@ const templateNews = document.getElementById("news-template");
 const templatePortfolio = document.getElementById("portfolio-template");
 
 const tradeList = document.getElementById("trade-menu");
-const userList = document.getElementById("messages-menu");
 
 const tradeInput = document.getElementById("sell-input");
+const messageInput = document.getElementById("message-text");
 
 const sellBtn = document.getElementById("sell-button");
 const buyBtn = document.getElementById("buy-button");
+const sendBtn = document.getElementById("send-button");
 
 sellBtn.addEventListener("click", () => tradeStock("sell"));
 buyBtn.addEventListener("click", () => tradeStock("buy"));
+sendBtn.addEventListener("click", () => formMessage());
 
 let isUpdating = false;
 
@@ -316,17 +318,56 @@ async function getMessage(){
     }
 }
 
-async function sendMessage(){
+/**
+ * function for getting all receivers and text from DOM and convert it to POST obj.
+ * */
+async function formMessage(){
     try{
-        const receivers = Array.from(document.querySelectorAll(".receiver:checked")).map(el => el.value);
+        const checkboxes = document.querySelectorAll(".recipient:checked");
+        const recipient = Array.from(checkboxes).map((el) => el.value);
 
-        if(receivers.length === 0){
+        const text = messageInput.value;
+
+        if(text === null || text.trim() === "" || recipient.length === 0){
             return;
         }
 
+        recipient.forEach((player) => {
+            sendMessage(player, text);
+        });
 
+        checkboxes.forEach(checkbox => checkbox.checked = false);
 
+        messageInput.value = "";
+
+        await getMessage();
+
+        console.log("success");
     } catch (error){
         console.log(error);
+    }
+}
+
+/**
+ * function to send request to the server for messages
+ * @param player - receiver
+ * @param text - message text
+ * */
+async function sendMessage(player, text){
+    const message = {
+        recipient: player,
+        message: text,
+    }
+
+    const response = await fetch("/api/messages", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(message)
+    });
+
+    if(!response.ok){
+        throw new Error(response.statusText);
     }
 }
