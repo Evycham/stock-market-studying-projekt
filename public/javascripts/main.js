@@ -255,8 +255,8 @@ function clearItems(name){
 
 /**
  * methode für Stock ver-/einkaufen
+ * @param action sell or buy
  * */
-
 async function tradeStock(action){
     const stockName = tradeList.value;
     let value = Number(tradeInput.value);
@@ -291,6 +291,22 @@ async function tradeStock(action){
 
         const data = await response.json();
         console.log("Success:", data);
+    } catch (error){
+        console.log(error);
+    }
+}
+
+async function getMessage(){
+    try{
+        const response = await fetch("/api/messages");
+
+        if(!response.ok){
+            throw new Error(response.statusText);
+        }
+
+        const data = await response.json();
+
+
     } catch (error){
         console.log(error);
     }
