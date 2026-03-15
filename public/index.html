@@ -61,7 +61,7 @@
 
     <!--send sms-->
     <div id="messages-item">
-        <h2 class="title">Messages</h2>
+        <h2 class="title">Send message</h2>
         <h4>Your message:</h4>
         <label><textarea id="message-text"></textarea></label>
         <h4>Select user:</h4>
@@ -74,10 +74,12 @@
 
     <!--receive sms-->
     <div id="messages">
-        <template>
+        <h2 class="title">Your sms</h2>
+        <template id="message-template">
             <div class="sms">
                 <span class="sms-sender"></span>
                 <span class="sms-text"></span>
+                <span class="sms-date"></span>
             </div>
         </template>
     </div>

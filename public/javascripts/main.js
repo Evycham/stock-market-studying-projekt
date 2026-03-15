@@ -5,18 +5,17 @@ const username = document.getElementById("user-name");
 const userBalance = document.getElementById("user-balance");
 
 const topPlayers = document.getElementById("top");
-
 const stocksItem = document.getElementById("stocks-item-list");
-
 const newsItem = document.getElementById("news-item");
-
 const portfolioItem = document.getElementById("portfolio-item-list");
 const portfolioValue = document.getElementById("portfolio-value");
+const messagesItem = document.getElementById("messages");
 
 const templateTop = document.getElementById("players-template");
 const templateStock = document.getElementById("stocks-template");
 const templateNews = document.getElementById("news-template");
 const templatePortfolio = document.getElementById("portfolio-template");
+const templateMessage = document.getElementById("message-template");
 
 const tradeList = document.getElementById("trade-menu");
 
@@ -49,6 +48,7 @@ function init() {
     getStocks();
     getNews();
     getPortfolio();
+    getMessage();
     tradeInput.value = "";
 }
 
@@ -312,7 +312,45 @@ async function getMessage(){
 
         const data = await response.json();
 
+        clearItems("sms");
 
+        let seen = new Set();
+        let key = null;
+
+        data.forEach(message => {
+            const recipient = message.recipient;
+
+            if(recipient === username.textContent) {
+                key = `${message.sender}|${message.recipient}|${message.text}|${message.date}`;
+                if(seen.has(key)){
+                    return;
+                }
+                seen.add(message);
+            }
+        });
+
+        seen.forEach(message => {
+            const recipient = message.recipient;
+
+            if(recipient === username.textContent){
+
+                const sender = message.sender;
+                const date = new Date(message.date);
+                const text = message.text;
+
+                const clone = templateMessage.content.cloneNode(true);
+                const smsSender = clone.querySelector(".sms-sender");
+                const smsText = clone.querySelector(".sms-text");
+                const smsDate = clone.querySelector(".sms-date");
+
+                smsSender.textContent = `New message from: ${sender}: `;
+                smsText.textContent = text;
+                smsDate.textContent = date;
+
+                messagesItem.appendChild(clone);
+
+            }
+        });
     } catch (error){
         console.log(error);
     }
@@ -333,7 +371,7 @@ async function formMessage(){
         }
 
         recipient.forEach((player) => {
-            sendMessage(player, text);
+                sendMessage(player, text);
         });
 
         checkboxes.forEach(checkbox => checkbox.checked = false);
