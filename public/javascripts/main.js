@@ -44,7 +44,7 @@ setInterval(() => {
 
 function init() {
     getUserInfo();
-    getAllUser();
+    getAllUsers();
     getStocks();
     getNews();
     getPortfolio();
@@ -59,7 +59,7 @@ async function update() {
     try{
         await updateStocks();
         await getUserInfo();
-        await getAllUser();
+        await getAllUsers();
         await getNews();
         await getPortfolio();
         isUpdating = false;
@@ -93,7 +93,7 @@ async function getUserInfo(){
 /**
  * Methode für die Anzeige alle Spieler nach der Größe ihres Geldzustands
  **/
-async function getAllUser(){
+async function getAllUsers(){
     try{
         const response = await fetch("/api/user/everybody");
 
@@ -132,7 +132,7 @@ async function getAllUser(){
 
 
 /**
- * funktion for getting stocks
+ * function for getting stocks which is used only on the beginning, in the init() function
  **/
 async function getStocks(){
     try{
@@ -181,6 +181,9 @@ async function getStocks(){
     }
 }
 
+/**
+ * function for permanent updating, only price and amount
+ * */
 async function updateStocks(){
     try{
         const response = await fetch("/api/stocks");
