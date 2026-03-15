@@ -312,48 +312,49 @@ async function getMessage(){
 
         const data = await response.json();
 
+        // drop old values
         clearItems("sms");
 
-        let seen = new Set();
-        let key = null;
+        // avoiding of doubled messages
+        const seen = new Set();
 
+        // creating uniq key and at the same time add obj. to DOM
         data.forEach(message => {
             const recipient = message.recipient;
 
             if(recipient === username.textContent) {
-                key = `${message.sender}|${message.recipient}|${message.text}|${message.date}`;
+                const key = `${message.sender}|${message.recipient}|${message.text}|${message.date}`;
                 if(seen.has(key)){
                     return;
                 }
-                seen.add(message);
-            }
-        });
-
-        seen.forEach(message => {
-            const recipient = message.recipient;
-
-            if(recipient === username.textContent){
-
-                const sender = message.sender;
-                const date = new Date(message.date);
-                const text = message.text;
-
-                const clone = templateMessage.content.cloneNode(true);
-                const smsSender = clone.querySelector(".sms-sender");
-                const smsText = clone.querySelector(".sms-text");
-                const smsDate = clone.querySelector(".sms-date");
-
-                smsSender.textContent = `New message from: ${sender}: `;
-                smsText.textContent = text;
-                smsDate.textContent = date;
-
-                messagesItem.appendChild(clone);
-
+                seen.add(key);
+                showMessage(message);
             }
         });
     } catch (error){
         console.log(error);
     }
+}
+
+/**
+ * helping function for the showing single message
+ * @param message - input message
+ * */
+function showMessage(message){
+            const sender = message.sender;
+            const date = new Date(message.date);
+            const text = message.text;
+
+            const clone = templateMessage.content.cloneNode(true);
+            const smsSender = clone.querySelector(".sms-sender");
+            const smsText = clone.querySelector(".sms-text");
+            const smsDate = clone.querySelector(".sms-date");
+
+            smsSender.textContent = `New message from: ${sender}: `;
+            smsText.textContent = text;
+            smsDate.textContent = date;
+
+            messagesItem.appendChild(clone);
 }
 
 /**
@@ -370,9 +371,9 @@ async function formMessage(){
             return;
         }
 
-        recipient.forEach((player) => {
-                sendMessage(player, text);
-        });
+        for(const player of recipient){
+            await sendMessage(player, text);
+        }
 
         checkboxes.forEach(checkbox => checkbox.checked = false);
 
