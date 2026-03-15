@@ -26,11 +26,18 @@ const sellBtn = document.getElementById("sell-button");
 const buyBtn = document.getElementById("buy-button");
 const sendBtn = document.getElementById("send-button");
 
+const chartsCanvas = document.getElementById("charts");
+const ctx = chartsCanvas.getContext("2d");
+
 sellBtn.addEventListener("click", () => tradeStock("sell"));
 buyBtn.addEventListener("click", () => tradeStock("buy"));
 sendBtn.addEventListener("click", () => formMessage());
 
 let isUpdating = false;
+
+const priceHistory = new Map();
+
+
 
 init();
 
@@ -42,13 +49,14 @@ setInterval(() => {
     update();
 }, 2_000);
 
-function init() {
-    getUserInfo();
-    getAllUsers();
-    getStocks();
-    getNews();
-    getPortfolio();
-    getMessage();
+async function init() {
+    ctx.clearRect(0, 0, chartsCanvas.width, chartsCanvas.height);
+    await getUserInfo();
+    await getAllUsers();
+    await getStocks();
+    await getNews();
+    await getPortfolio();
+    await getMessage();
     tradeInput.value = "";
 }
 
@@ -62,6 +70,7 @@ async function update() {
         await getAllUsers();
         await getNews();
         await getPortfolio();
+        getCharts();
         isUpdating = false;
     } catch(error){
         console.log(error);
@@ -173,6 +182,9 @@ async function getStocks(){
             option.textContent = stock.name;
 
             tradeList.appendChild(option);
+
+            priceHistory.set(stock.name, []);
+            priceHistory.get(stock.name).push(stock.price);
         });
 
         tradeList.value = selected;
@@ -201,6 +213,10 @@ async function updateStocks(){
 
             price.textContent = stock.price;
             count.textContent = stock.numberAvailable;
+            if(priceHistory.get(stock.name).length > 50){
+                priceHistory.get(stock.name).shift();
+            }
+            priceHistory.get(stock.name).push(stock.price);
         });
     } catch (error){
         console.log(error);
@@ -439,4 +455,36 @@ async function sendMessage(player, text){
     if(!response.ok){
         throw new Error(response.statusText);
     }
+}
+
+function showCharts(history, min, max){
+    if(min === max || history.length < 2){
+        return;
+    }
+
+    ctx.beginPath();
+
+    for(let i = 0; i < history.length; i++){
+        let y = chartsCanvas.height - ((history[i] - min) / (max-min)) * chartsCanvas.height;
+        let x = i * (chartsCanvas.width / (history.length - 1));
+
+        if(i === 0){
+            ctx.moveTo(x,y);
+        } else{
+            ctx.lineTo(x,y);
+        }
+    }
+    ctx.stroke();
+}
+
+function getCharts(){
+
+
+    ctx.clearRect(0, 0, chartsCanvas.width, chartsCanvas.height);
+    ctx.lineWidth = 2;
+
+    priceHistory.forEach((history, name) => {
+        ctx.strokeStyle = "hsl(" + Math.random()*360 + ",70%,50%)";
+        showCharts(history);
+    })
 }
