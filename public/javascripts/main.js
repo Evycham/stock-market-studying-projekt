@@ -57,7 +57,7 @@ function init() {
  **/
 async function update() {
     try{
-        await getStocks();
+        await updateStocks();
         await getUserInfo();
         await getAllUser();
         await getNews();
@@ -153,6 +153,10 @@ async function getStocks(){
         // anzeigen
         data.forEach(stock => {
             const clone = templateStock.content.cloneNode(true);
+
+            const stockItem = clone.querySelector(".stock-item");
+            stockItem.dataset.name = stock.name;
+
             const stockName = clone.querySelector(".stock-name");
             const stockPrice = clone.querySelector(".stock-price");
             const stockAmount = clone.querySelector(".stock-amount");
@@ -172,6 +176,29 @@ async function getStocks(){
         });
 
         tradeList.value = selected;
+    } catch (error){
+        console.log(error);
+    }
+}
+
+async function updateStocks(){
+    try{
+        const response = await fetch("/api/stocks");
+
+        if(!response.ok){
+            throw new Error(response.statusText);
+        }
+
+        const data = await response.json();
+
+        data.forEach(stock => {
+            const el = document.querySelector(`.stock-item[data-name="${stock.name}"]`);
+            const price = el.querySelector(".stock-price");
+            const count = el.querySelector(".stock-amount");
+
+            price.textContent = stock.price;
+            count.textContent = stock.numberAvailable;
+        });
     } catch (error){
         console.log(error);
     }
