@@ -291,6 +291,7 @@ async function tradeStock(action){
 
         const data = await response.json();
         console.log("Success:", data);
+        await update();
     } catch (error){
         console.log(error);
     }
